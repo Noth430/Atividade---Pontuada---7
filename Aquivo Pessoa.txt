@@ -1,0 +1,5 @@
+henrique,20,1.8,79.0
+henrique,20,1.8,79.0
+henrique,25,1.89,45.0
+Yan Mendes,23,1.7,68.0
+leonardo,23,1.78,48.0

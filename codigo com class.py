@@ -4,13 +4,12 @@ from dataclasses import dataclass
 
 @dataclass
 class Pessoa:
-    nome = str
-    idade = int
-    altura = float
-    peso = float
+    nome:str
+    idade:int
+    altura:float
+    peso:float
 class Final:
     lista_final:list
-
 
 def menu():
     print("""
@@ -34,13 +33,13 @@ def criando_arquivo_final(a, b):
             arquivo_Pessoa.write(f"{Pessoa}, \n")
         arquivo_Pessoa.close()
 
-def lendo_arquivos(a):
+def lendo_arquivos(nome_arquivo):
     lista_final = []
-    with open(a, "r") as lendo_Pessoa:
-        for linha in lendo_Pessoa:
-            nome,idade, altura, peso = linha.strip().split(",")
-            lista_final.append(Pessoa(nome = int(nome),idade = int(idade), altura = altura, peso = float(peso)))
-        lendo_Pessoa.close()
+    with open(nome_arquivo, "r") as arquivo:
+        for linha in arquivo:
+            nome, idade, altura, peso = linha.strip().split(",")
+            assert len(nome) > 0, "Nome não pode ser vazio"
+            lista_final.append(Pessoa(nome=nome, idade=int(idade), altura=float(altura), peso=float(peso)))
     return lista_final
 
 def logoSenai():
@@ -49,26 +48,31 @@ def logoSenai():
     print("="*40)
 
 
-def imc(a:float,b:float):
+def imc(a):
     lista_imc = []
-    for i,peso in enumerate(b):
-        imc = peso/(a[i]*a[i])
+    for cliente in a:
+        imc = cliente.peso/(cliente.altura**2)
         lista_imc.append(imc)
     return lista_imc
 
-def classificacao_imc(resposta):
-    if resposta >= 40:
-        return 'Obesidade grau 3'
-    elif resposta >= 35:
-        return'Obesidade grau 2'
-    elif resposta >= 30:
-            return'Obesidade grau 1'
-    elif resposta >= 25:
-        return'Sobrepeso'
-    elif resposta >=18.5:
-        return 'Peso normal'
-    elif resposta <= 18.5:
-        return'Abaixo do peso'
+def analisando_imc(a:float):
+    lista_analise_imc = []
+
+    for cliente in a:
+        if cliente >= 40:
+            lista_analise_imc.append("Obesidade grau 3")
+        elif cliente >= 35:
+            lista_analise_imc.append("Obesidade grau 2")
+        elif cliente >= 30:
+            lista_analise_imc.append("Obesidade grau 1")
+        elif cliente >= 25:
+            lista_analise_imc.append("Sobrepeso")
+        elif cliente >=18.5:
+            lista_analise_imc.append("Peso normal")
+        elif cliente <= 18.5:
+            lista_analise_imc.append("Abaixo do peso")
+
+    return lista_analise_imc
 lista_Pessoa = []
 while True:
     menu()
@@ -87,12 +91,12 @@ while True:
             limpar_tela()
         case "2":
             limpar_tela()
-            nome_arquivo = "Dados.txt"
-            lista_definitiva = lendo_arquivo(nome_arquivo)
-            imc = calculando_imc(lista_definitiva)
-            analise_imc = analisando_imc(imc)
+            nome_arquivo = "Aquivo Pessoa.txt"
+            lista_definitiva = lendo_arquivos(nome_arquivo)
+            imcs = imc(lista_definitiva)
+            analizando_imc = analisando_imc(imcs)
             nome_arquivo1 = "pesquisa_IMC.txt"
-            criando_arquivo_final(nome_arquivo1, imc)
+            criando_arquivo_final(nome_arquivo1, imcs)
             print("="*40)
             print(f"{"Resultado":^40}")
             print("="*40)
@@ -101,8 +105,8 @@ while True:
                 print(f"Idade: {cliente.idade}")
                 print(f"Altura: {cliente.altura}")
                 print(f"Peso: {cliente.peso}")
-                print(f"Seu IMC é: {imc[i]:.2f}")
-                print(f"Grau: {analise_imc[i]}")
+                print(f"Seu IMC é: {imcs[i]:.2f}")
+                print(f"Grau: {analizando_imc[i]}")
 
         case "3":
             break
